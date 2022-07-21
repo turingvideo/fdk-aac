@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  LIB_PREFIX: ./deps
+  BUILD: build
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          mkdir ${{ env.BUILD }}
+          mkdir ${{ env.LIB_PREFIX }}
+          mkdir ${{ env.LIB_PREFIX }}/x64
+          cmake . -B ${{ env.BUILD }} -DCMAKE_BUILD_TYPE=Release -DBUILD_PROGRAMS=YES -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_INSTALL_PREFIX=${{ env.LIB_PREFIX }}/x64
+          cmake --build ${{ env.BUILD }}
+          cmake --install ${{ env.BUILD }}
+
+      - name: Archive
+        tar -czvf fdk-aac-x64.tar.gz ${{ env.LIB_PREFIX }}/x64
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{ github.workspace }}/fdk-aac-x64.tar.gz
