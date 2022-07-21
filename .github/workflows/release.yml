@@ -30,7 +30,7 @@ jobs:
           cmake --install ${{ env.BUILD }}
 
       - name: Archive
-        tar -czvf fdk-aac-x64.tar.gz ${{ env.LIB_PREFIX }}/x64
+        run: tar -czvf fdk-aac-x64.tar.gz ${{ env.LIB_PREFIX }}/x64
 
       - name: Release
         uses: softprops/action-gh-release@v1
