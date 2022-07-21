@@ -10,6 +10,7 @@ on:
 env:
   LIB_PREFIX: ./deps
   BUILD: build
+  RELEASE_FILE_X64: fdk-aac-x64-${{ github.ref_name }}.tar.gz
 
 jobs:
   build:
@@ -30,11 +31,11 @@ jobs:
           cmake --install ${{ env.BUILD }}
 
       - name: Archive
-        run: tar -czvf fdk-aac-x64.tar.gz ${{ env.LIB_PREFIX }}/x64
+        run: tar -czvf ${{env.RELEASE_FILE_X64}} ${{ env.LIB_PREFIX }}/x64
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{ github.workspace }}/fdk-aac-x64-${{ github.ref_name }}.tar.gz
+            ${{ github.workspace }}/${{env.RELEASE_FILE_X64}}
