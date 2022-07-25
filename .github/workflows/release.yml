@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
-    tags: [ 'v*.*.*' ]
+    branches: [master]
+    tags: ["v*.*.*"]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 env:
   LIB_PREFIX: ./deps
@@ -26,7 +26,7 @@ jobs:
           mkdir ${{ env.BUILD }}
           mkdir ${{ env.LIB_PREFIX }}
           mkdir ${{ env.LIB_PREFIX }}/x64
-          cmake . -B ${{ env.BUILD }} -DCMAKE_BUILD_TYPE=Release -DBUILD_PROGRAMS=YES -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_INSTALL_PREFIX=${{ env.LIB_PREFIX }}/x64
+          cmake . -B ${{ env.BUILD }} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_INSTALL_PREFIX=${{ env.LIB_PREFIX }}/x64
           cmake --build ${{ env.BUILD }}
           cmake --install ${{ env.BUILD }}
 
